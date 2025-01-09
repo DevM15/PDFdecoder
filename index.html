@@ -4,19 +4,73 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDFdecoder - Your PDF Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
   </head>
   <body>
     <header>
-      <div class="container text-center">
-        <h1>PDFdecoder</h1>
+      <div class="container">
+        <nav class="navbar">
+          <h1>PDFdecoder</h1>
+          <div class="tools-dropdown" style="display: none" id="nav-tools">
+            <button onclick="toggleMenu()" class="tools-button">
+              <span>Tools</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="menu-dropdown" id="menu-dropdown">
+              <div class="menu-item" onclick="showConverter('jpg-to-pdf')">
+                <i class="fas fa-file-pdf"></i>
+                JPG to PDF
+              </div>
+              <div class="menu-item" onclick="showConverter('pdf-to-jpg')">
+                <i class="fas fa-image"></i>
+                PDF to JPG
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
     </header>
 
     <main>
-      <div class="converter-section container">
-        <h2>JPG to PDF Converter</h2>
+      <div class="container">
+        <div class="cards-section" id="cards-section">
+          <div class="conversion-card" onclick="showConverter('jpg-to-pdf')">
+            <div class="card-icon">📄</div>
+            <h3>JPG to PDF</h3>
+            <p>Convert your images to PDF format</p>
+          </div>
+          <div class="conversion-card" onclick="showConverter('pdf-to-jpg')">
+            <div class="card-icon">🖼️</div>
+            <h3>PDF to JPG</h3>
+            <p>Extract images from PDF files</p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="converter-section container"
+        style="display: none"
+        id="jpg-to-pdf-converter"
+      >
+        <div class="converter-header">
+          <h2>JPG to PDF Converter</h2>
+          <div>
+            <button
+              onclick="convertToPDF()"
+              class="convert-button"
+              id="convertButton"
+            >
+              Convert to PDF
+            </button>
+          </div>
+        </div>
         <div class="input-container">
           <input
             type="file"
@@ -24,11 +78,47 @@
             accept=".jpg,.jpeg"
             multiple
             class="file-input"
+            onchange="previewImages()"
           />
-          <button onclick="convertToPDF()" class="convert-button">
-            Convert to PDF
-          </button>
-          <p id="conversionStatus" class="status-message"></p>
+          <div class="preview-section" style="display: none">
+            <div id="imagePreview" class="image-preview"></div>
+            <div id="pdfPreview" class="pdf-preview"></div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="converter-section container"
+        style="display: none"
+        id="pdf-to-jpg-converter"
+      >
+        <div class="converter-header">
+          <h2>PDF to JPG Converter</h2>
+          <div>
+            <button
+              onclick="convertToJPG()"
+              class="convert-button"
+              style="display: none"
+              id="convertButton"
+            >
+              Convert to JPG
+            </button>
+            <p id="conversionStatus" class="status-message"></p>
+          </div>
+        </div>
+        <div class="input-container">
+          <input
+            type="file"
+            id="pdfInput"
+            accept=".pdf"
+            multiple
+            class="file-input"
+            onchange="previewPDF()"
+          />
+          <div class="preview-section" style="display: none">
+            <div id="pdfPreview" class="pdf-preview"></div>
+            <div id="jpgPreview" class="jpg-preview"></div>
+          </div>
         </div>
       </div>
     </main>
@@ -40,59 +130,346 @@
     </footer>
 
     <script>
-      async function convertToPDF() {
+      function toggleMenu() {
+        const dropdown = document.getElementById("menu-dropdown");
+        dropdown.classList.toggle("show");
+
+        // Rotate chevron icon when menu is open
+        const chevron = document.querySelector(".tools-button i");
+        chevron.style.transform = dropdown.classList.contains("show")
+          ? "rotate(180deg)"
+          : "rotate(0)";
+      }
+
+      // Close dropdown when clicking outside
+      window.onclick = function (event) {
+        if (
+          !event.target.matches(".tools-button") &&
+          !event.target.matches(".tools-button *")
+        ) {
+          const dropdowns = document.getElementsByClassName("menu-dropdown");
+          const chevron = document.querySelector(".tools-button i");
+          for (let dropdown of dropdowns) {
+            if (dropdown.classList.contains("show")) {
+              dropdown.classList.remove("show");
+              chevron.style.transform = "rotate(0)";
+            }
+          }
+        }
+      };
+
+      function showConverter(type) {
+        // Hide cards section and show tools dropdown
+        document.getElementById("cards-section").style.display = "none";
+        document.getElementById("nav-tools").style.display = "block";
+
+        // Hide all converters
+        document.querySelectorAll(".converter-section").forEach((converter) => {
+          converter.style.display = "none";
+        });
+
+        // Show selected converter
+        const selectedConverter = document.getElementById(type + "-converter");
+        if (selectedConverter) {
+          selectedConverter.style.display = "block";
+        }
+
+        // Close dropdown if open
+        const dropdown = document.getElementById("menu-dropdown");
+        const chevron = document.querySelector(".tools-button i");
+        if (dropdown.classList.contains("show")) {
+          dropdown.classList.remove("show");
+          chevron.style.transform = "rotate(0)";
+        }
+      }
+
+      function previewImages() {
         const input = document.getElementById("jpgInput");
-        const status = document.getElementById("conversionStatus");
+        const preview = document.getElementById("imagePreview");
+        const pdfPreview = document.getElementById("pdfPreview");
+        const previewSection = document.querySelector(".preview-section");
+        const convertButton = document.getElementById("convertButton");
 
         if (!input.files || input.files.length === 0) {
-          status.textContent = "Please select at least one JPG file";
+          previewSection.style.display = "none";
+          convertButton.style.display = "none";
           return;
         }
 
-        status.textContent = "Converting...";
+        // Show the preview section and convert button
+        previewSection.style.display = "block";
+        convertButton.style.display = "block";
+
+        preview.innerHTML = "";
+        pdfPreview.innerHTML = "";
+
+        const previewTitle = document.createElement("h3");
+        previewTitle.textContent = `Selected Images (${input.files.length})`;
+        preview.appendChild(previewTitle);
+
+        const imageGrid = document.createElement("div");
+        imageGrid.className = "image-grid";
+        preview.appendChild(imageGrid);
+
+        Array.from(input.files).forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const imageItem = document.createElement("div");
+            imageItem.className = "image-item";
+
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            imageItem.appendChild(img);
+
+            const overlay = document.createElement("div");
+            overlay.className = "image-overlay";
+            overlay.textContent = file.name;
+            imageItem.appendChild(overlay);
+
+            imageGrid.appendChild(imageItem);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function convertToPDF() {
+        const input = document.getElementById("jpgInput");
+        const pdfPreview = document.getElementById("pdfPreview");
+        const imagePreview = document.getElementById("imagePreview");
+        const convertButton = document.getElementById("convertButton");
+        pdfPreview.innerHTML = "";
+
+        if (!input.files || input.files.length === 0) {
+          return;
+        }
+
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF();
-        let isFirstPage = true;
+        let currentPage = 0;
+        const totalPages = input.files.length;
 
         for (let i = 0; i < input.files.length; i++) {
           const file = input.files[i];
           try {
-            const img = await new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = reject;
-                img.src = e.target.result;
-              };
-              reader.onerror = reject;
-              reader.readAsDataURL(file);
-            });
-
-            if (!isFirstPage) {
+            const img = await loadImage(file);
+            if (currentPage > 0) {
               pdf.addPage();
             }
-            isFirstPage = false;
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const imgRatio = img.width / img.height;
+            const pageRatio = pageWidth / pageHeight;
+            let finalWidth = pageWidth;
+            let finalHeight = pageWidth / imgRatio;
 
-            const imgProps = pdf.getImageProperties(img);
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            if (finalHeight > pageHeight) {
+              finalHeight = pageHeight;
+              finalWidth = pageHeight * imgRatio;
+            }
 
-            pdf.addImage(img, "JPEG", 0, 0, pdfWidth, pdfHeight);
-            status.textContent = `Converting image ${i + 1} of ${
-              input.files.length
-            }...`;
+            const x = (pageWidth - finalWidth) / 2;
+            const y = (pageHeight - finalHeight) / 2;
+
+            pdf.addImage(img, "JPEG", x, y, finalWidth, finalHeight);
+            currentPage++;
           } catch (error) {
-            status.textContent = `Error processing image ${i + 1}: ${
-              error.message
-            }`;
-            return;
+            console.error("Error processing image:", error);
           }
         }
 
-        pdf.save("converted.pdf");
-        status.textContent = `Successfully converted ${input.files.length} images to PDF!`;
+        // Create PDF blob and display in preview
+        const pdfBlob = pdf.output("blob");
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Create helper text
+        const helperText = document.createElement("p");
+        helperText.className = "filename-helper";
+        helperText.textContent = "Enter a name for your PDF file:";
+
+        // Create filename input
+        const filenameContainer = document.createElement("div");
+        filenameContainer.className = "filename-input";
+
+        const filenameInput = document.createElement("input");
+        filenameInput.type = "text";
+        filenameInput.value = input.files[0].name.replace(/\.[^/.]+$/, ""); // Use first image name without extension
+        filenameInput.placeholder = "Enter filename";
+
+        const extension = document.createElement("span");
+        extension.textContent = ".pdf";
+
+        filenameContainer.appendChild(filenameInput);
+        filenameContainer.appendChild(extension);
+
+        // Create iframe for preview
+        const iframe = document.createElement("iframe");
+        iframe.src = pdfUrl;
+        iframe.style.width = "100%";
+        iframe.style.height = "500px";
+        iframe.style.border = "none";
+
+        pdfPreview.appendChild(helperText);
+        pdfPreview.appendChild(filenameContainer);
+        pdfPreview.appendChild(iframe);
+
+        // Replace convert button with download button
+        convertButton.textContent = "Download PDF";
+        convertButton.onclick = () => {
+          const filename = filenameInput.value.trim() || input.files[0].name.replace(/\.[^/.]+$/, "");
+          pdf.save(filename + ".pdf");
+        };
+
+        // Hide image preview
+        imagePreview.style.display = "none";
+
+        // Clear the file input
+        input.value = "";
+      }
+
+      async function previewPDF() {
+        const input = document.getElementById("pdfInput");
+        const preview = document.getElementById("pdfPreview");
+        const jpgPreview = document.getElementById("jpgPreview");
+        const previewSection = document.querySelector("#pdf-to-jpg-converter .preview-section");
+        const convertButton = document.getElementById("pdf-to-jpg-converter").querySelector(".convert-button");
+
+        if (!input.files || input.files.length === 0) {
+          previewSection.style.display = "none";
+          convertButton.style.display = "none";
+          return;
+        }
+
+        // Show the preview section and convert button
+        previewSection.style.display = "block";
+        convertButton.style.display = "block";
+
+        preview.innerHTML = "";
+        jpgPreview.innerHTML = "";
+
+        const previewTitle = document.createElement("h3");
+        previewTitle.textContent = `Selected PDF (${input.files.length})`;
+        preview.appendChild(previewTitle);
+
+        const pdfContainer = document.createElement("div");
+        pdfContainer.className = "pdf-container";
+        preview.appendChild(pdfContainer);
+
+        Array.from(input.files).forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const iframe = document.createElement("iframe");
+            iframe.src = e.target.result;
+            iframe.className = "pdf-preview";
+            pdfContainer.appendChild(iframe);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function convertToJPG() {
+        const input = document.getElementById("pdfInput");
+        const jpgPreview = document.getElementById("jpgPreview");
+        const pdfPreview = document.getElementById("pdfPreview");
+        const convertButton = document.getElementById("pdf-to-jpg-converter").querySelector(".convert-button");
+        jpgPreview.innerHTML = "";
+
+        if (!input.files || input.files.length === 0) {
+          return;
+        }
+
+        const imageGrid = document.createElement("div");
+        imageGrid.className = "image-grid";
+        jpgPreview.appendChild(imageGrid);
+
+        try {
+          const pdfjsLib = window['pdfjs-dist/build/pdf'];
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+          let convertedImages = []; // Store converted images data
+
+          for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+              const page = await pdf.getPage(pageNum);
+              const viewport = page.getViewport({ scale: 1.5 });
+              
+              const canvas = document.createElement('canvas');
+              const context = canvas.getContext('2d');
+              canvas.height = viewport.height;
+              canvas.width = viewport.width;
+              
+              await page.render({
+                canvasContext: context,
+                viewport: viewport
+              }).promise;
+
+              const imageItem = document.createElement("div");
+              imageItem.className = "image-item";
+
+              const imgData = canvas.toDataURL('image/jpeg', 0.8);
+              const img = document.createElement("img");
+              img.src = imgData;
+              imageItem.appendChild(img);
+
+              const overlay = document.createElement("div");
+              overlay.className = "image-overlay";
+              overlay.textContent = `Page ${pageNum}`;
+              imageItem.appendChild(overlay);
+
+              imageGrid.appendChild(imageItem);
+
+              // Store image data for download
+              convertedImages.push({
+                data: imgData,
+                pageNum: pageNum,
+                fileName: file.name
+              });
+            }
+          }
+
+          // Hide PDF preview and show image preview
+          pdfPreview.style.display = "none";
+          jpgPreview.style.display = "block";
+
+          // Update convert button to download button
+          convertButton.textContent = "Download Images";
+          convertButton.onclick = () => {
+            convertedImages.forEach((img) => {
+              const link = document.createElement("a");
+              link.href = img.data;
+              const baseName = img.fileName.replace('.pdf', '');
+              link.download = `${baseName}_page${img.pageNum}.jpg`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+          };
+
+        } catch (error) {
+          jpgPreview.innerHTML = `<p class="error-message">Error converting PDF: ${error.message}</p>`;
+        }
+
+        // Clear the file input
+        input.value = "";
+      }
+
+      async function loadImage(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = e.target.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
       }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
