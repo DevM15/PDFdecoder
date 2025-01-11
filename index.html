@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PDFdecoder - Your PDF Tools</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -17,13 +20,23 @@
     <header>
       <div class="container">
         <nav class="navbar">
-          <h1>PDFdecoder</h1>
+          <a href="/" style="color: white; text-decoration: none">
+            <h1>PDFdecoder</h1></a
+          >
           <div class="tools-dropdown" style="display: none" id="nav-tools">
             <button onclick="toggleMenu()" class="tools-button">
               <span>Tools</span>
               <i class="fas fa-chevron-down"></i>
             </button>
             <div class="menu-dropdown" id="menu-dropdown">
+              <div class="menu-item" onclick="showConverter('merge_pdf')">
+                <i class="fas fa-file-pdf"></i>
+                Merge PDF
+              </div>
+              <div class="menu-item" onclick="showConverter('split_pdf')">
+                <i class="fas fa-image"></i>
+                Split PDF
+              </div>
               <div class="menu-item" onclick="showConverter('jpg-to-pdf')">
                 <i class="fas fa-file-pdf"></i>
                 JPG to PDF
@@ -41,16 +54,189 @@
     <main>
       <div class="container">
         <div class="cards-section" id="cards-section">
+          <div class="conversion-card" onclick="showConverter('merge_pdf')">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 50 50"
+              >
+                <g
+                  fill="rgb(93.333333%,42.352941%,30.196078%)"
+                  fill-rule="evenodd"
+                >
+                  <path
+                    d="M5.488.363h21.75c1.78 0 2.43.184 3.082.535a3.66 3.66 0 0 1 1.512 1.512c.348.652.535 1.297.535 3.082v21.746c0 1.78-.187 2.43-.535 3.082a3.66 3.66 0 0 1-1.512 1.512c-.652.348-1.3.535-3.082.535H5.488c-1.78 0-2.43-.187-3.082-.535A3.66 3.66 0 0 1 .895 30.32c-.348-.652-.535-1.3-.535-3.082V5.488c0-1.78.188-2.43.535-3.082A3.71 3.71 0 0 1 2.406.895c.652-.348 1.3-.53 3.082-.53zm0 0"
+                  ></path>
+                  <path
+                    d="M44.563 49.69H22.816c-1.78 0-2.43-.184-3.082-.535-.645-.34-1.172-.867-1.512-1.512-.348-.652-.535-1.297-.535-3.082V22.816c0-1.78.184-2.43.535-3.082.34-.645.867-1.172 1.512-1.512.652-.348 1.3-.535 3.082-.535h21.746c1.785 0 2.43.188 3.082.535.645.34 1.172.867 1.512 1.512.352.652.535 1.3.535 3.082v21.746c0 1.785-.184 2.43-.535 3.082-.34.645-.867 1.172-1.512 1.512-.652.352-1.297.535-3.082.535zm0 0"
+                  ></path>
+                </g>
+                <path
+                  d="M17.906 10.965c-.484 0-.875.387-.875.86v3.8L9.84 8.523c-.344-.336-.895-.336-1.238 0-.164.16-.254.38-.254.605a.86.86 0 0 0 .254.6l7.195 7.098h-3.875c-.484 0-.875.387-.875.86s.4.86.875.86h5.984a.88.88 0 0 0 .332-.066.86.86 0 0 0 .473-.465.79.79 0 0 0 .066-.328v-5.87c.004-.473-.387-.86-.87-.86zm14.418 28.008c.48 0 .87-.383.87-.86v-3.797l7.195 7.098a.88.88 0 0 0 1.234 0 .85.85 0 0 0 .258-.605c0-.23-.094-.45-.258-.605l-7.2-7.102h3.875c.484 0 .875-.383.875-.86s-.4-.855-.875-.855h-5.984a.92.92 0 0 0-.336.066c-.2.086-.383.25-.473.46a.88.88 0 0 0-.066.328v5.87c0 .477.4.86.875.86zm-10.1-10.1c-.355.352-.93.352-1.285 0s-.355-.934 0-1.3a.91.91 0 0 1 1.285 0c.355.352.355.934 0 1.3zm3.374-3.357a.91.91 0 0 1-1.285 0 .91.91 0 0 1 0-1.285c.352-.352.93-.352 1.285 0a.91.91 0 0 1 0 1.285zm3.36-3.364a.91.91 0 0 1-1.285 0 .91.91 0 0 1 0-1.285.91.91 0 0 1 1.285 0 .91.91 0 0 1 0 1.285zm0 0"
+                  fill="rgb(100%,100%,100%)"
+                ></path>
+              </svg>
+            </div>
+            <h3>Merge PDF</h3>
+            <p>
+              Combine PDFs in the order you want with the easiest PDF merger
+              available.
+            </p>
+          </div>
+          <div class="conversion-card" onclick="showConverter('split_pdf')">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 50 50"
+              >
+                <g
+                  fill="rgb(93.333333%,42.352941%,30.196078%)"
+                  fill-rule="evenodd"
+                >
+                  <path
+                    d="M5.488.363h21.75c1.78 0 2.43.184 3.082.535a3.66 3.66 0 0 1 1.512 1.512c.348.652.535 1.297.535 3.082v21.746c0 1.78-.187 2.43-.535 3.082a3.66 3.66 0 0 1-1.512 1.512c-.652.348-1.3.535-3.082.535H5.488c-1.78 0-2.43-.187-3.082-.535A3.66 3.66 0 0 1 .895 30.32c-.348-.652-.535-1.3-.535-3.082V5.488c0-1.78.188-2.43.535-3.082A3.71 3.71 0 0 1 2.406.895c.652-.348 1.3-.53 3.082-.53zm0 0"
+                  ></path>
+                  <path
+                    d="M44.563 49.69H22.816c-1.78 0-2.43-.184-3.082-.535-.645-.34-1.172-.867-1.512-1.512-.348-.652-.535-1.297-.535-3.082V22.816c0-1.78.184-2.43.535-3.082.34-.645.867-1.172 1.512-1.512.652-.348 1.3-.535 3.082-.535h21.746c1.785 0 2.43.188 3.082.535.645.34 1.172.867 1.512 1.512.352.652.535 1.3.535 3.082v21.746c0 1.785-.184 2.43-.535 3.082-.34.645-.867 1.172-1.512 1.512-.652.352-1.297.535-3.082.535zm0 0"
+                  ></path>
+                </g>
+                <path
+                  d="M9.22 15.87c.484 0 .875-.387.875-.86v-3.8l7.195 7.102a.88.88 0 0 0 1.234 0 .85.85 0 0 0 0-1.215L11.328 10h3.875c.484 0 .875-.387.875-.86s-.4-.86-.875-.86H9.22a.88.88 0 0 0-.332.066.86.86 0 0 0-.539.793v5.875c0 .473.4.86.87.86zm31.793 18.2c-.484 0-.875.383-.875.855v3.8L32.94 31.63a.88.88 0 0 0-1.234 0c-.164.156-.258.375-.258.605a.85.85 0 0 0 .258.605l7.2 7.1H35.02c-.48 0-.87.387-.87.86a.86.86 0 0 0 .871.855H41a.88.88 0 0 0 .805-.527.86.86 0 0 0 .066-.328v-5.883a.87.87 0 0 0-.87-.855zm-18.78-5.187c-.355.352-.93.352-1.285 0s-.355-.934 0-1.3a.91.91 0 0 1 1.285 0c.355.352.355.934 0 1.3zm3.365-3.367a.91.91 0 0 1-1.285 0 .91.91 0 0 1 0-1.285c.352-.352.93-.352 1.285 0a.91.91 0 0 1 0 1.285zm3.36-3.364a.91.91 0 0 1-1.285 0 .91.91 0 0 1 0-1.285.91.91 0 0 1 1.285 0 .91.91 0 0 1 0 1.285zm0 0"
+                  fill="rgb(100%,100%,100%)"
+                ></path>
+              </svg>
+            </div>
+            <h3>Split PDF</h3>
+            <p>
+              Separate one page or a whole set for easy conversion into
+              independent PDF files.
+            </p>
+          </div>
           <div class="conversion-card" onclick="showConverter('jpg-to-pdf')">
-            <div class="card-icon">📄</div>
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 50 50"
+              >
+                <path
+                  d="M17.676 34.344h9.55c2.477 0 3.375-.258 4.28-.742a5.04 5.04 0 0 0 2.098-2.102c.484-.902.742-1.8.742-4.277v-9.547H44.82c1.8 0 2.453.188 3.113.54s1.176.87 1.527 1.527.54 1.31.54 3.113V44.82c0 1.8-.187 2.453-.54 3.113a3.69 3.69 0 0 1-1.527 1.527c-.66.352-1.312.54-3.113.54H22.855c-1.8 0-2.453-.187-3.113-.54s-1.172-.87-1.527-1.527-.54-1.312-.54-3.113zm0 0"
+                  fill-rule="evenodd"
+                  fill="rgb(98.431373%,93.72549%,65.882353%)"
+                ></path>
+                <path
+                  d="M43.94 37.137c0-.477-.395-.863-.883-.863s-.883.387-.883.863v3.844l-5.145-5.047c-.348-.34-.902-.34-1.25 0a.85.85 0 0 0-.258.609.86.86 0 0 0 .258.613l5.145 5.05h-3.914c-.488 0-.883.387-.883.867s.395.867.883.867h6.05c.113-.004.227-.023.336-.07a.87.87 0 0 0 .477-.465c.05-.105.066-.22.066-.332l.004-5.934zm0 0"
+                  fill="rgb(71.764706%,62.745098%,0.392157%)"
+                ></path>
+                <g fill-rule="evenodd">
+                  <path
+                    d="M5.184 0h21.988c1.8 0 2.453.188 3.113.54.652.344 1.184.88 1.527 1.53.352.656.54 1.313.54 3.113v21.984c0 1.805-.187 2.457-.54 3.117-.344.648-.875 1.184-1.527 1.527-.66.352-1.312.54-3.113.54H5.184c-1.8 0-2.457-.187-3.113-.54-.652-.344-1.184-.88-1.527-1.527C.188 29.625 0 28.973 0 27.168V5.184c0-1.8.188-2.457.54-3.113.344-.652.88-1.184 1.53-1.53S3.383 0 5.184 0zm0 0"
+                    fill="rgb(83.921569%,74.901961%,17.647059%)"
+                  ></path>
+                  <path
+                    d="M10.28 12.945v4.688c0 1.66-.926 2.66-2.707 2.66C5.406 20.293 5 18.852 5 18.07c0-.668.31-1.098.86-1.098.648 0 .813.504.813 1.05 0 .516.242.89.88.89.594 0 .926-.44.926-1.3V12.95c0-.54.352-.898.902-.898s.902.36.902.898zm1.672 6.402v-6.102c0-.8.418-1.055 1.055-1.055h2.762c1.516 0 2.738.75 2.738 2.508 0 1.44-1 2.508-2.75 2.508h-2v2.152c0 .54-.355.902-.902.902s-.902-.363-.902-.902zm1.805-5.773v2.242h1.68c.727 0 1.266-.437 1.266-1.12 0-.793-.56-1.12-1.45-1.12zm13.285 3.1v2.984c0 .332-.254.602-.613.602-.52 0-.66-.32-.773-1.023-.516.648-1.23 1.066-2.352 1.066-2.793 0-3.863-1.926-3.863-4.145 0-2.676 1.672-4.148 4.125-4.148 2.004 0 3.07 1.2 3.07 1.902 0 .63-.46.793-.848.793-.89 0-.56-1.242-2.32-1.242-1.242 0-2.223.813-2.223 2.816 0 1.56.77 2.637 2.246 2.637.957 0 1.793-.648 1.88-1.617H24.2c-.383 0-.812-.14-.812-.69 0-.44.254-.69.703-.69h2.223c.527 0 .738.262.738.758zm0 0"
+                    fill="rgb(100%,100%,100%)"
+                  ></path>
+                </g>
+              </svg>
+            </div>
             <h3>JPG to PDF</h3>
             <p>Convert your images to PDF format</p>
           </div>
           <div class="conversion-card" onclick="showConverter('pdf-to-jpg')">
-            <div class="card-icon">🖼️</div>
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 50 50"
+              >
+                <path
+                  d="M32.324 15.656h-9.55c-2.477 0-3.375.258-4.28.742a5.06 5.06 0 0 0-2.098 2.102c-.484.902-.742 1.8-.742 4.277v9.55H5.18c-1.8 0-2.453-.187-3.113-.54a3.69 3.69 0 0 1-1.527-1.527C.188 29.598 0 28.945 0 27.145V5.18c0-1.8.188-2.453.54-3.113A3.69 3.69 0 0 1 2.066.539C2.727.188 3.38 0 5.18 0h21.965c1.8 0 2.453.188 3.113.54a3.69 3.69 0 0 1 1.527 1.527c.352.66.54 1.313.54 3.113zm0 0"
+                  fill-rule="evenodd"
+                  fill="rgb(98.431373%,93.72549%,65.882353%)"
+                ></path>
+                <path
+                  d="M14.477 7.52c0-.477-.395-.863-.883-.863s-.883.387-.883.863v3.844L7.566 6.316a.89.89 0 0 0-1.246 0c-.168.16-.258.38-.258.61s.1.453.258.613l5.145 5.05H7.55c-.488 0-.883.387-.883.867s.395.863.883.863h6.047a.85.85 0 0 0 .34-.066c.215-.086.387-.254.477-.47.05-.102.066-.215.066-.328l.004-5.934zm0 0"
+                  fill="rgb(71.764706%,62.745098%,0.392157%)"
+                ></path>
+                <g fill-rule="evenodd">
+                  <path
+                    d="M22.855 17.676H44.82c1.8 0 2.453.188 3.113.543.648.344 1.184.875 1.527 1.527.352.656.54 1.31.54 3.11V44.82c0 1.8-.187 2.453-.54 3.113a3.69 3.69 0 0 1-1.527 1.527c-.66.352-1.312.54-3.113.54H22.855c-1.8 0-2.453-.187-3.113-.54-.648-.344-1.18-.88-1.527-1.527-.352-.66-.54-1.312-.54-3.113V22.855c0-1.8.188-2.453.54-3.113.348-.648.88-1.18 1.527-1.527.66-.352 1.313-.54 3.113-.54zm0 0"
+                    fill="rgb(83.921569%,74.901961%,17.647059%)"
+                  ></path>
+                  <path
+                    d="M41.5 26c1.102 0 2 .898 2 2s-.898 2-2 2-2-.898-2-2 .898-2 2-2zM30.6 39h-6.344c-.1 0-.172-.047-.215-.125s-.043-.168.004-.242l6.574-11.02a.26.26 0 0 1 .426 0l3.832 6.422 2.57-2.625c.047-.05.11-.074.176-.074h.008c.07 0 .137.03.18.086l6.1 7.13c.07.043.11.12.11.203 0 .133-.113.242-.246.242H30.6v-.004zm0 0"
+                    fill="rgb(100%,100%,100%)"
+                  ></path>
+                </g>
+              </svg>
+            </div>
             <h3>PDF to JPG</h3>
             <p>Extract images from PDF files</p>
           </div>
+        </div>
+      </div>
+
+      <div
+        class="converter-section container"
+        style="display: none"
+        id="merge_pdf-converter"
+      >
+        <div class="converter-header">
+          <h2>Merge PDf</h2>
+        </div>
+        <div class="input-container">
+          <input
+            type="file"
+            id="pdfInput"
+            accept=".pdf"
+            class="file-input"
+            multiple
+          />
+        </div>
+        <div>
+          <button onclick="mergePdf()" class="convert-button" id="mergeButton">
+            Merge
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="converter-section container"
+        style="display: none"
+        id="split_pdf-converter"
+      >
+        <div class="converter-header">
+          <h2>Split PDf</h2>
+        </div>
+        <div class="input-container">
+          <input type="file" id="pdfInput2" accept=".pdf" class="file-input" />
+
+          <input
+            type="number"
+            id="splitPages"
+            placeholder="Pages per split (e.g., 2)"
+            style="
+              margin-bottom: 10px;
+              display: block;
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #ddd;
+              border-radius: 4px;
+              box-sizing: border-box;
+            "
+          />
+        </div>
+        <div>
+          <button onclick="splitPdf()" class="convert-button" id="splitButton">
+            Split
+          </button>
         </div>
       </div>
 
@@ -315,7 +501,9 @@
         // Replace convert button with download button
         convertButton.textContent = "Download PDF";
         convertButton.onclick = () => {
-          const filename = filenameInput.value.trim() || input.files[0].name.replace(/\.[^/.]+$/, "");
+          const filename =
+            filenameInput.value.trim() ||
+            input.files[0].name.replace(/\.[^/.]+$/, "");
           pdf.save(filename + ".pdf");
         };
 
@@ -330,8 +518,12 @@
         const input = document.getElementById("pdfInput");
         const preview = document.getElementById("pdfPreview");
         const jpgPreview = document.getElementById("jpgPreview");
-        const previewSection = document.querySelector("#pdf-to-jpg-converter .preview-section");
-        const convertButton = document.getElementById("pdf-to-jpg-converter").querySelector(".convert-button");
+        const previewSection = document.querySelector(
+          "#pdf-to-jpg-converter .preview-section"
+        );
+        const convertButton = document
+          .getElementById("pdf-to-jpg-converter")
+          .querySelector(".convert-button");
 
         if (!input.files || input.files.length === 0) {
           previewSection.style.display = "none";
@@ -370,7 +562,9 @@
         const input = document.getElementById("pdfInput");
         const jpgPreview = document.getElementById("jpgPreview");
         const pdfPreview = document.getElementById("pdfPreview");
-        const convertButton = document.getElementById("pdf-to-jpg-converter").querySelector(".convert-button");
+        const convertButton = document
+          .getElementById("pdf-to-jpg-converter")
+          .querySelector(".convert-button");
         jpgPreview.innerHTML = "";
 
         if (!input.files || input.files.length === 0) {
@@ -382,34 +576,36 @@
         jpgPreview.appendChild(imageGrid);
 
         try {
-          const pdfjsLib = window['pdfjs-dist/build/pdf'];
-          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          const pdfjsLib = window["pdfjs-dist/build/pdf"];
+          pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
           let convertedImages = []; // Store converted images data
 
           for (let i = 0; i < input.files.length; i++) {
             const file = input.files[i];
             const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer })
+              .promise;
+
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
               const page = await pdf.getPage(pageNum);
               const viewport = page.getViewport({ scale: 1.5 });
-              
-              const canvas = document.createElement('canvas');
-              const context = canvas.getContext('2d');
+
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
               canvas.height = viewport.height;
               canvas.width = viewport.width;
-              
+
               await page.render({
                 canvasContext: context,
-                viewport: viewport
+                viewport: viewport,
               }).promise;
 
               const imageItem = document.createElement("div");
               imageItem.className = "image-item";
 
-              const imgData = canvas.toDataURL('image/jpeg', 0.8);
+              const imgData = canvas.toDataURL("image/jpeg", 0.8);
               const img = document.createElement("img");
               img.src = imgData;
               imageItem.appendChild(img);
@@ -425,7 +621,7 @@
               convertedImages.push({
                 data: imgData,
                 pageNum: pageNum,
-                fileName: file.name
+                fileName: file.name,
               });
             }
           }
@@ -440,14 +636,13 @@
             convertedImages.forEach((img) => {
               const link = document.createElement("a");
               link.href = img.data;
-              const baseName = img.fileName.replace('.pdf', '');
+              const baseName = img.fileName.replace(".pdf", "");
               link.download = `${baseName}_page${img.pageNum}.jpg`;
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
             });
           };
-
         } catch (error) {
           jpgPreview.innerHTML = `<p class="error-message">Error converting PDF: ${error.message}</p>`;
         }
@@ -469,7 +664,88 @@
           reader.readAsDataURL(file);
         });
       }
+
+      async function mergePdf() {
+        const pdfFilesInput = document.getElementById("pdfInput");
+        const mergeButton = document.getElementById("mergeButton");
+        const downloadLink = document.getElementById("downloadLink");
+
+        const files = pdfFilesInput.files;
+
+        if (files.length === 0) {
+          alert("Please select at least two PDF files.");
+          return;
+        }
+
+        // Create a new PDF document using PDFLib
+        const mergedPdf = await PDFLib.PDFDocument.create();
+
+        for (const file of files) {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+          const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          pages.forEach((page) => mergedPdf.addPage(page));
+        }
+
+        const mergedPdfBytes = await mergedPdf.save();
+
+        // Create a download link
+        const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "merged.pdf";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      async function splitPdf() {
+        const pdfFileInput = document.getElementById("pdfInput2");
+        const splitPagesInput = document.getElementById("splitPages");
+        const splitButton = document.getElementById("splitButton");
+        const file = pdfFileInput.files[0];
+        const pagesPerSplit = parseInt(splitPagesInput.value);
+
+        if (!file) {
+          alert("Please select a PDF file.");
+          return;
+        }
+
+        if (!pagesPerSplit || pagesPerSplit <= 0) {
+          alert("Please enter a valid number of pages per split.");
+          return;
+        }
+
+        // Load the PDF file
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+        const totalPages = pdf.getPageCount();
+
+        // Split the PDF
+        for (let i = 0; i < totalPages; i += pagesPerSplit) {
+          const splitPdf = await PDFLib.PDFDocument.create();
+          const pagesToCopy = Array.from(
+            { length: Math.min(pagesPerSplit, totalPages - i) },
+            (_, j) => i + j
+          );
+
+          const copiedPages = await splitPdf.copyPages(pdf, pagesToCopy);
+          copiedPages.forEach((page) => splitPdf.addPage(page));
+
+          const splitPdfBytes = await splitPdf.save();
+
+          // Automatically download each split PDF
+          const blob = new Blob([splitPdfBytes], { type: "application/pdf" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `split-${i + 1}-${i + pagesToCopy.length}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
   </body>
 </html>

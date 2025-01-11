@@ -412,7 +412,7 @@ footer {
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 16px;
+    padding: 16px;
   }
   .converter-section {
     max-width: 480px;
@@ -470,7 +470,7 @@ footer {
 
 @media (max-width: 480px) {
   .container {
-    padding: 0 12px;
+    padding: 12px;
   }
 
   .converter-section {
